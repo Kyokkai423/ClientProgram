@@ -18,13 +18,13 @@ namespace Users
         private RelayCommand addCommand;
 
         // Вывод количества клиентов
-        private string textblock;
-        public string Textblock
+        private string clientCount;
+        public string ClientCount
         {
-            get { return textblock; }
+            get { return clientCount; }
             set
             {
-                textblock = value;
+                clientCount = value;
                 OnPropertyChanged();
             }
         }
@@ -43,10 +43,17 @@ namespace Users
                             Zakazi zakaz = nuw.Zakaz; // Получение имени нового клиента с другого окна
                             db.Zakaz.Add(zakaz); // Добавление
                             db.SaveChanges(); // Сохранение
+                            Count();
                         }
                     }));
             }
         }
+
+        private void Count()
+        {
+            ClientCount = "Количество клиентов: " + Zakazi.Count().ToString(); // Вывод количества существующих клиентов
+        }
+
         public RelayCommand SaveCommand
         {
             get
@@ -77,6 +84,7 @@ namespace Users
                                     var delete = obj as Zakazi; // Определение выделенного объекта
                                     db.Zakaz.Remove(delete); // Удаление
                                     db.SaveChanges(); // Сохранение
+                                    Count();
                                     MessageBox.Show("Клиент удалён");
                                 }
                             }
@@ -98,19 +106,18 @@ namespace Users
         public IEnumerable<Zakazi> SelectedZakazi
         {
             get { return selectedZakazi; }
-            set
             {
                 selectedZakazi = value;
                 OnPropertyChanged("SelectedZakazi");
             }
         }
-
+        
         // Фильтрация по выбранному клиенту
         public Zakazi SelectedZakaz
         {
             get { return selectedZakaz; }
             set
-            {
+            { 
                 selectedZakaz = value;
                 OnPropertyChanged();
                 if (SelectedZakaz != null) // Проверка на ноль чтобы не было ошибки при удалении клиента
@@ -124,7 +131,7 @@ namespace Users
             db = new ApplicationContext(); // Инициализация контекста для работы с базой
             db.Zakaz.Load();
             Zakazi = db.Zakaz.Local.ToBindingList();
-            Textblock = "Количество клиентов: " + Zakazi.Count().ToString(); // Вывод количества существующих клиентов
+            Count();
         }
     }
 }
