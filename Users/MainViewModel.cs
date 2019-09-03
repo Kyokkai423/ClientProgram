@@ -106,6 +106,7 @@ namespace Users
         public IEnumerable<Zakazi> SelectedZakazi
         {
             get { return selectedZakazi; }
+            set
             {
                 selectedZakazi = value;
                 OnPropertyChanged("SelectedZakazi");
